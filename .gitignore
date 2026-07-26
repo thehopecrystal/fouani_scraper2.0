@@ -1,0 +1,7 @@
+/downloads/images/*
+/exports/json/*
+/exports/csv/*
+/exports/excel/*
+/exports/pdf/*
+/exports/database/*
+/logs/*.log
