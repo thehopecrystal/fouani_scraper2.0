@@ -191,7 +191,7 @@ class ScrapeWorker(QThread):
             self.logger.error("WooCommerce sync enabled but credentials are incomplete - skipping sync.")
             return
         client = WooCommerceClient(wc.store_url, wc.consumer_key, wc.consumer_secret, logger=self.logger,
-                                    timeout=self.config.timeout_seconds, verify_ssl=wc.verify_ssl)
+                                    timeout=wc.timeout_seconds, verify_ssl=wc.verify_ssl)
         ok, msg = client.test_connection()
         if not ok:
             self.logger.error(f"WooCommerce connection failed, aborting sync: {msg}")

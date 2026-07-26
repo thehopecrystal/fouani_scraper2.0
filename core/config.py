@@ -34,6 +34,7 @@ class WooCommerceConfig:
     store_url: str = ""
     consumer_key: str = ""
     consumer_secret: str = ""
+    timeout_seconds: int = 60  # separate timeout for WC API
     verify_ssl: bool = True  # turn off for local dev sites with self-signed certs
 
 
@@ -87,7 +88,10 @@ class AppConfig:
             raw = json.load(f)
         wc_raw = raw.pop("woocommerce", {}) or {}
         cfg = cls(**{k: v for k, v in raw.items() if k in cls.__dataclass_fields__})
-        cfg.woocommerce = WooCommerceConfig(**wc_raw)
+        # handle legacy configs without the new timeout field
+        wc_fields = WooCommerceConfig.__dataclass_fields__
+        wc_args = {k: v for k, v in wc_raw.items() if k in wc_fields}
+        cfg.woocommerce = WooCommerceConfig(**wc_args)
         return cfg
 
     def ensure_dirs(self):

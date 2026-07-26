@@ -136,7 +136,7 @@ class WooCommerceClient:
         payload = {
             "name": product.get("name", ""),
             "sku": product.get("sku", ""),
-            "type": "variable" if product.get("variants") else "simple",
+            "type": "variable" if product.get("variants") and product["variants"] else "simple",
             "regular_price": str(product.get("regular_price", "") or ""),
             "sale_price": str(product.get("sale_price", "") or ""),
             "description": product.get("full_description", ""),
@@ -153,4 +153,25 @@ class WooCommerceClient:
         brand = product.get("brand")
         if brand:
             payload["categories"].append({"name": brand})
+
+        # Add variations if they exist
+        variants = product.get("variants") or []
+        if variants:
+            # Ensure attributes are marked for variation
+            for attr in payload["attributes"]:
+                if any(attr["name"] in v.get("attributes", {}) for v in variants):
+                    attr["variation"] = True
+                    # WC expects options as a list of strings
+                    attr["options"] = [opt.strip() for opt in attr["options"][0].split(',')]
+
+            payload["variations"] = [
+                {
+                    "sku": v.get("sku"),
+                    "regular_price": str(v.get("regular_price", "")),
+                    "stock_status": v.get("stock_status", "instock"),
+                    "attributes": [{"name": k, "option": o} for k, o in v.get("attributes", {}).items()]
+                }
+                for v in variants
+            ]
+
         return payload

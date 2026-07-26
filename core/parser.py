@@ -59,7 +59,7 @@ def parse_product_page(html: str, url: str) -> dict:
     attributes = _extract_attributes(soup, full_desc)
     price_info = _extract_price(soup)
     stock_status = _extract_stock_status(soup)
-    variants = _extract_variants(soup)
+    variants, attributes = _extract_variants(soup, attributes)
     model = sku or name
 
     product_id_match = re.search(r"/product/(\d+)", url)
@@ -235,33 +235,69 @@ def _extract_stock_status(soup):
     return "instock"
 
 
-def _extract_variants(soup):
+def _extract_variants(soup, existing_attributes):
     """
     Look for common variant-selector UI patterns: a group of buttons/labels
     near text like "Color" / "Size" / "Capacity". Fouani's sampled pages
     are mostly single-SKU products; this returns [] when no variant
     selector is detected, and WooCommerce export falls back to a simple
     product in that case.
+
+    The most reliable source is often a JSON blob inside a <script> tag.
     """
     variants = []
-    for label_text in ("Color", "Size", "Capacity", "Storage"):
-        label = soup.find(string=re.compile(rf"^\s*{label_text}\s*$", re.IGNORECASE))
-        if not label:
-            continue
-        parent = label.find_parent()
-        if not parent:
-            continue
-        options = []
-        for opt in parent.find_all_next(limit=15):
-            if opt.name in ("button", "li", "span") and opt.get_text(strip=True):
-                txt = opt.get_text(strip=True)
-                if 0 < len(txt) < 30 and txt.lower() != label_text.lower():
-                    options.append(txt)
-            if len(options) >= 8:
-                break
-        if options:
-            variants.append({"attribute": label_text, "options": options})
-    return variants
+    attributes_for_variation = {}
+
+    # Strategy 1: Find Nuxt/Vue JSON state in a script tag (most reliable)
+    script_tag = soup.find("script", string=re.compile(r"window\.__NUXT__"))
+    if script_tag:
+        try:
+            # Extract the JSON part of the script
+            json_text = re.search(r"window\.__NUXT__\s*=\s*({.+});", script_tag.string).group(1)
+            nuxt_data = json.loads(json_text)
+            # This path is an assumption and may need inspection on a live product page
+            # Common paths: state.product, state.pageData.product, payload.data[0].productDetails
+            product_data = nuxt_data.get("state", {}).get("product", {})
+            if product_data and "variants" in product_data and product_data["variants"]:
+                for var in product_data["variants"]:
+                    # Map the fields to our desired structure
+                    variants.append({
+                        "sku": var.get("sku"),
+                        "regular_price": var.get("price"),
+                        "stock_status": "instock" if var.get("quantity", 0) > 0 else "outofstock",
+                        "attributes": {
+                            attr["name"]: attr["value"] for attr in var.get("attributes", [])
+                        }
+                    })
+                # Collect all unique attribute names and values for the parent product
+                for var in variants:
+                    for name, value in var.get("attributes", {}).items():
+                        if name not in attributes_for_variation:
+                            attributes_for_variation[name] = set()
+                        attributes_for_variation[name].add(value)
+
+    # Update existing attributes with variation attributes
+    for name, values in attributes_for_variation.items():
+        existing_attributes[name] = ", ".join(sorted(list(values)))
+
+    # Strategy 2: Fallback to scraping visible selectors (less reliable)
+    if not variants:
+        for label_text in ("Color", "Size", "Capacity", "Storage"):
+            label = soup.find(string=re.compile(rf"^\s*{label_text}\s*$", re.IGNORECASE))
+            if not label: continue
+            parent = label.find_parent()
+            if not parent: continue
+            options = []
+            for opt in parent.find_all_next(limit=15):
+                if opt.name in ("button", "li", "span") and opt.get_text(strip=True):
+                    txt = opt.get_text(strip=True)
+                    if 0 < len(txt) < 30 and txt.lower() != label_text.lower():
+                        options.append(txt)
+                if len(options) >= 8: break
+            if options:
+                existing_attributes[label_text] = ", ".join(options)
+
+    return variants, existing_attributes
 
 
 def _extract_price(soup):

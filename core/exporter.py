@@ -16,7 +16,7 @@ WC_CSV_COLUMNS = [
     "Short description", "Categories", "Images", "Brand", "In stock?",
     "Stock", "Attribute 1 name", "Attribute 1 value(s)",
     "Attribute 2 name", "Attribute 2 value(s)", "Attribute 3 name",
-    "Attribute 3 value(s)", "Published", "Visibility in catalog",
+    "Attribute 3 value(s)", "Parent", "Published", "Visibility in catalog",
     "Tax status", "Tax class", "Weight (kg)", "Length (cm)",
     "Width (cm)", "Height (cm)", "Type",
 ]
@@ -75,6 +75,7 @@ def product_to_wc_row(product: dict) -> dict:
         "In stock?": "1" if product.get("stock_status") == "instock" else "0",
         "Stock": product.get("stock_quantity", ""),
         "Published": "1",
+        "Parent": "",
         "Visibility in catalog": "visible",
         "Tax status": "taxable",
         "Tax class": "",
@@ -88,6 +89,33 @@ def product_to_wc_row(product: dict) -> dict:
     return row
 
 
+def _product_to_wc_variation_rows(product: dict, parent_row: dict) -> list:
+    """Generate child variation rows for a variable product."""
+    rows = []
+    variants = product.get("variants") or []
+    if isinstance(variants, str):
+        variants = json.loads(variants or "[]")
+
+    for var in variants:
+        var_attrs = var.get("attributes", {})
+        row = {
+            "Type": "variation",
+            "SKU": var.get("sku", ""),
+            "Parent": parent_row["SKU"],
+            "Regular price": var.get("regular_price", ""),
+            "In stock?": "1" if var.get("stock_status") == "instock" else "0",
+            "Published": "1",
+            "Visibility in catalog": "visible",
+        }
+        # Map variation attributes to Attribute 1/2/3 columns
+        for i, (name, value) in enumerate(var_attrs.items(), start=1):
+            if i > 3: break
+            row[f"Attribute {i} name"] = name
+            row[f"Attribute {i} value(s)"] = value
+        rows.append(row)
+    return rows
+
+
 def export_csv(products, csv_folder, filename=None) -> str:
     os.makedirs(csv_folder, exist_ok=True)
     filename = filename or f"fouani_woocommerce_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
@@ -96,7 +124,11 @@ def export_csv(products, csv_folder, filename=None) -> str:
         writer = csv.DictWriter(f, fieldnames=WC_CSV_COLUMNS, extrasaction="ignore")
         writer.writeheader()
         for p in products:
-            writer.writerow(product_to_wc_row(p))
+            parent_row = product_to_wc_row(p)
+            writer.writerow(parent_row)
+            if parent_row["Type"] == "variable":
+                variation_rows = _product_to_wc_variation_rows(p, parent_row)
+                writer.writerows(variation_rows)
     return path
 
 
