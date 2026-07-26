@@ -51,7 +51,7 @@
     }
   ],
   "threads": 4,
-  "timeout_seconds": 60,
+  "timeout_seconds": 90,
   "retry_count": 3,
   "delay_between_requests_ms": 400,
   "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
@@ -72,6 +72,7 @@
     "store_url": "https://bigboxhubstore.com",
     "consumer_key": "ck_bea2599a98444f3c9b956e36646428f9c7e61fa4",
     "consumer_secret": "cs_d12afe62159828d01f2e37bb3328e2c0db4a09de",
+    "timeout_seconds": 60,
     "verify_ssl": true
   }
 }

@@ -92,27 +92,33 @@ class WooCommerceClient:
 
     def upsert_product(self, product: dict, retry=3) -> dict:
         """Create or update (matched by SKU) a single WooCommerce product."""
-        payload = self._to_wc_payload(product)
-        sku = payload.get("sku")
+        parent_payload = self._to_wc_payload(product)
+        sku = parent_payload.get("sku")
+        # Variations are handled in a separate batch request after the parent is created/updated.
+        variations_payload = parent_payload.pop("variations", None)
 
         existing = self.find_by_sku(sku) if sku else None
         last_err = None
-        for attempt in range(1, retry + 1):
+        for attempt in range(1, retry + 1): # Retry loop for the parent product
             try:
                 kwargs = self._merge_params()
                 if existing:
                     resp = self.session.put(
-                        f"{self.base}/products/{existing['id']}",
-                        json=payload, timeout=self.timeout, verify=self.verify_ssl, **kwargs,
+                        f"{self.base}/products/{existing['id']}", json=parent_payload,
+                        timeout=self.timeout, verify=self.verify_ssl, **kwargs,
                     )
                 else:
                     resp = self.session.post(
-                        f"{self.base}/products",
-                        json=payload, timeout=self.timeout, verify=self.verify_ssl, **kwargs,
+                        f"{self.base}/products", json=parent_payload,
+                        timeout=self.timeout, verify=self.verify_ssl, **kwargs,
                     )
                 if resp.status_code in (200, 201):
-                    self._log(f"WooCommerce {'updated' if existing else 'created'}: {payload.get('name')}")
-                    return resp.json()
+                    self._log(f"WooCommerce parent {'updated' if existing else 'created'}: {parent_payload.get('name')}")
+                    wc_product = resp.json()
+                    # If there are variations, now we sync them.
+                    if variations_payload:
+                        self._sync_variations(wc_product['id'], variations_payload, retry)
+                    return wc_product
                 last_err = f"HTTP {resp.status_code}: {resp.text[:300]}"
             except Exception as e:
                 last_err = str(e)
@@ -120,6 +126,35 @@ class WooCommerceClient:
             time.sleep(1.5 * attempt)
 
         raise WooCommerceError(f"Failed to sync product SKU={sku}: {last_err}")
+
+    def _sync_variations(self, product_id: int, variations: list, retry: int):
+        """Uses the batch variation endpoint to create/update variations."""
+        # For simplicity, we'll just use the 'create' batch operation. WooCommerce's
+        # API doesn't have a simple upsert for variations by SKU in one call.
+        # A more complex implementation would fetch existing variations and diff them.
+        # This approach is sufficient for a one-way sync.
+        # To avoid duplicates, we first delete existing variations.
+        self._log(f"Product ID {product_id}: Deleting existing variations before sync...")
+        self.session.post(f"{self.base}/products/{product_id}/variations/batch",
+                          json={"delete": "all"}, **self._auth_kwargs())
+
+        batch_payload = {"create": variations}
+        last_err = None
+        for attempt in range(1, retry + 1):
+            try:
+                kwargs = self._merge_params()
+                resp = self.session.post(
+                    f"{self.base}/products/{product_id}/variations/batch",
+                    json=batch_payload, timeout=self.timeout, verify=self.verify_ssl, **kwargs
+                )
+                resp.raise_for_status()
+                self._log(f"Product ID {product_id}: Synced {len(variations)} variations.")
+                return
+            except Exception as e:
+                last_err = str(e)
+            self._log(f"[Attempt {attempt}/{retry}] Variation sync failed for product {product_id}: {last_err}", "warning")
+            time.sleep(1.5 * attempt)
+        raise WooCommerceError(f"Failed to sync variations for product ID={product_id}: {last_err}")
 
     @staticmethod
     def _to_wc_payload(product: dict) -> dict:

@@ -275,6 +275,9 @@ def _extract_variants(soup, existing_attributes):
                         if name not in attributes_for_variation:
                             attributes_for_variation[name] = set()
                         attributes_for_variation[name].add(value)
+        except (AttributeError, json.JSONDecodeError, KeyError):
+            # If the NUXT data is missing or has an unexpected structure, just ignore it.
+            pass
 
     # Update existing attributes with variation attributes
     for name, values in attributes_for_variation.items():
