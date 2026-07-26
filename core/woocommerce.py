@@ -169,6 +169,21 @@ class WooCommerceClient:
         if isinstance(images, str):
             images = json.loads(images or "[]")
 
+        # Helper to parse dimensions from attributes
+        def _dimensions(attrs: dict):
+            dims_str = attrs.get("Dimensions", "")
+            length = width = height = ""
+            if dims_str:
+                # Remove units and split, e.g., "120 x 60 x 15 cm" -> ["120", "60", "15"]
+                parts = [p.strip() for p in re.sub(r'(cm|mm|in|"|\s)', '', dims_str.lower()).split('x')]
+                if len(parts) >= 2:
+                    length, width = parts[0], parts[1]
+                if len(parts) >= 3:
+                    height = parts[2]
+            return {"length": length, "width": width, "height": height}
+
+        weight_str = attributes.get("Weight", "").lower().replace("kg", "").strip()
+
         payload = {
             "name": product.get("name", ""),
             "sku": product.get("sku", ""),
@@ -185,6 +200,8 @@ class WooCommerceClient:
                 {"name": k, "options": [v], "visible": True}
                 for k, v in list(attributes.items())[:10]
             ],
+            "weight": weight_str,
+            "dimensions": _dimensions(attributes),
         }
         brand = product.get("brand")
         if brand:
