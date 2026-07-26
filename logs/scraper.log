@@ -1,0 +1,84 @@
+[19:47:31] [INFO] Application started.
+[19:47:40] [INFO] Settings saved.
+[19:47:53] [INFO] Settings saved.
+[19:48:06] [INFO] Starting discovery for 12 categories.
+[19:48:06] [INFO] Scanning category: Promotions
+[19:48:17] [INFO] Category 'Promotions': page 1 scanned, 40 products on page, 40 unique so far.
+[19:48:17] [INFO] Category 'Promotions': 40 product URLs discovered.
+[19:48:17] [INFO] Scanning category: Refrigerator
+[19:48:22] [INFO] Category 'Refrigerator': page 1 scanned, 50 products on page, 50 unique so far.
+[19:48:29] [INFO] Category 'Refrigerator': page 2 scanned, 20 products on page, 70 unique so far.
+[19:48:29] [INFO] Category 'Refrigerator': 70 product URLs discovered.
+[19:48:29] [INFO] Scanning category: Freezer
+[19:48:33] [INFO] Category 'Freezer': page 1 scanned, 30 products on page, 30 unique so far.
+[19:48:33] [INFO] Category 'Freezer': 30 product URLs discovered.
+[19:48:33] [INFO] Scanning category: Washing Machines
+[19:48:38] [INFO] Category 'Washing Machines': page 1 scanned, 50 products on page, 50 unique so far.
+[19:48:42] [INFO] Category 'Washing Machines': page 2 scanned, 12 products on page, 62 unique so far.
+[19:48:42] [INFO] Category 'Washing Machines': 62 product URLs discovered.
+[19:48:42] [INFO] Scanning category: TVs
+[19:48:46] [INFO] Category 'TVs': page 1 scanned, 50 products on page, 50 unique so far.
+[19:48:50] [INFO] Category 'TVs': page 2 scanned, 50 products on page, 100 unique so far.
+[19:48:55] [INFO] Category 'TVs': page 3 scanned, 28 products on page, 128 unique so far.
+[19:48:55] [INFO] Category 'TVs': 128 product URLs discovered.
+[19:48:55] [INFO] Scanning category: Audio
+[19:48:59] [INFO] Category 'Audio': page 1 scanned, 50 products on page, 50 unique so far.
+[19:49:03] [INFO] Category 'Audio': page 2 scanned, 24 products on page, 74 unique so far.
+[19:49:03] [INFO] Category 'Audio': 74 product URLs discovered.
+[19:49:03] [INFO] Scanning category: ACs
+[19:49:08] [INFO] Category 'ACs': page 1 scanned, 38 products on page, 38 unique so far.
+[19:49:08] [INFO] Category 'ACs': 38 product URLs discovered.
+[19:49:08] [INFO] Scanning category: Cookers/Microwave
+[19:49:13] [INFO] Category 'Cookers/Microwave': page 1 scanned, 50 products on page, 50 unique so far.
+[19:49:18] [INFO] Category 'Cookers/Microwave': page 2 scanned, 19 products on page, 69 unique so far.
+[19:49:18] [INFO] Category 'Cookers/Microwave': 69 product URLs discovered.
+[19:49:18] [INFO] Scanning category: Small Appliances/Fans
+[19:49:22] [INFO] Category 'Small Appliances/Fans': page 1 scanned, 50 products on page, 50 unique so far.
+[19:49:27] [INFO] Category 'Small Appliances/Fans': page 2 scanned, 36 products on page, 86 unique so far.
+[19:49:27] [INFO] Category 'Small Appliances/Fans': 86 product URLs discovered.
+[19:49:27] [INFO] Scanning category: Power Solution
+[19:49:32] [INFO] Category 'Power Solution': page 1 scanned, 50 products on page, 50 unique so far.
+[19:49:36] [INFO] Category 'Power Solution': page 2 scanned, 35 products on page, 85 unique so far.
+[19:49:36] [INFO] Category 'Power Solution': 85 product URLs discovered.
+[19:49:36] [INFO] Scanning category: Furniture
+[19:49:41] [INFO] Category 'Furniture': page 1 scanned, 20 products on page, 20 unique so far.
+[19:49:41] [INFO] Category 'Furniture': 20 product URLs discovered.
+[19:49:41] [INFO] Scanning category: Others
+[19:49:45] [INFO] Category 'Others': page 1 scanned, 15 products on page, 15 unique so far.
+[19:49:45] [INFO] Category 'Others': 15 product URLs discovered.
+[19:49:45] [INFO] Scraping 0 pending products (resumed from previous run if any).
+[19:49:46] [INFO] WooCommerce CSV written: C:\Users\admin\Downloads\fouani_scraper (1)\fouani_scraper2.0\exports\csv\fouani_woocommerce_20260726_194946.csv
+[19:49:50] [INFO] Syncing 674 products to WooCommerce...
+[19:50:53] [INFO] WooCommerce parent created: Hisense TV ULED 75 Inch U8Q 4K Smart Mini-LED 165Hz VRR Gaming TV
+[19:51:22] [INFO] WooCommerce parent updated: Hisense Monitor 1080p 27 Inch N3F
+[19:52:08] [INFO] WooCommerce parent created: LG TV 86 Inch NanoCell 4K Smart with AI Magic Remote
+[19:52:55] [INFO] WooCommerce parent created: LG TV OLED 83 Inch C5 4K Smart TV AI Magic Remote webOS25
+[19:53:38] [INFO] WooCommerce parent created: LG TV QNED 86 Inch QNED80T6B 4K Smart TV AI Magic Remote webOS24
+[19:54:36] [INFO] WooCommerce parent created: LG TV UHD 98 Inch UT90 4K Smart TV AI Magic Remote webOS24
+[19:55:10] [INFO] WooCommerce parent updated: Hisense Monitor 27 Inch (G3Q) FHD 240Hz
+[19:55:59] [INFO] WooCommerce parent created: LG TV OLED 55 Inch C4 4K Smart TV AI Magic remote Dolby Vision webOS24 2024
+[19:57:04] [WARNING] [Attempt 1/3] WooCommerce sync failed for SKU HISTV100U7Q: HTTPSConnectionPool(host='bigboxhubstore.com', port=443): Read timed out. (read timeout=60)
+[19:58:06] [WARNING] [Attempt 2/3] WooCommerce sync failed for SKU HISTV100U7Q: HTTPSConnectionPool(host='bigboxhubstore.com', port=443): Read timed out. (read timeout=60)
+[19:58:13] [WARNING] [Attempt 3/3] WooCommerce sync failed for SKU HISTV100U7Q: HTTP 400: {"code":"product_invalid_sku","message":"Invalid or duplicated SKU.","data":{"status":400,"resource_id":6900,"unique_sku":"HISTV100U7Q-1"}}
+[19:58:18] [ERROR] Failed to sync product SKU=HISTV100U7Q: HTTP 400: {"code":"product_invalid_sku","message":"Invalid or duplicated SKU.","data":{"status":400,"resource_id":6900,"unique_sku":"HISTV100U7Q-1"}}
+[19:59:02] [INFO] WooCommerce parent created: Hisense TV 65 Inch A6Q UHD 4K Smart
+[19:59:42] [INFO] WooCommerce parent created: Hisense TV ULED 55 Inch U6N 4K Smart
+[20:00:24] [INFO] WooCommerce parent created: LG TV OLED 65 Inch C4 4K Smart TV AI Magic Remote webOS24
+[20:01:15] [INFO] WooCommerce parent created: LG TV OLED 83 Inch G4 4K Smart TV AI Magic Remote webOS24
+[20:01:46] [INFO] WooCommerce parent updated: Hisense Monitor 1440p 27 Inch G5F Gaming
+[20:02:36] [INFO] WooCommerce parent created: Hisense TV QLED 85 Inch Q6Q 4K Smart
+[20:03:19] [INFO] WooCommerce parent created: LG TV QNED 85 Inch QNED72B6T 4K Smart TV
+[20:03:54] [INFO] WooCommerce parent created: Hisense TV FHD 40 Inch A4S Smart
+[20:04:32] [INFO] WooCommerce parent updated: Hisense TV FHD 43 Inch A4S Smart TV
+[20:05:22] [INFO] WooCommerce parent created: LG TV UHD 55 Inch UR73 4K Smart TV
+[20:06:08] [INFO] WooCommerce parent created: LG TV UHD 55 Inch UT73 4K Smart TV AI Magic remote HDR10 webOS24
+[20:06:48] [INFO] WooCommerce parent created: LG TV UHD 65 Inch UT73 4K Smart TV AI Magic Remote webOS24
+[20:07:33] [INFO] WooCommerce parent created: Hisense Laser Cinema TV 80-150 Inch Projection Size PX3 4K Smart
+[20:08:07] [INFO] WooCommerce parent updated: LG TV OLED 48 Inch C2 4K Smart TV α9 Gen5
+[20:09:01] [INFO] WooCommerce parent created: Hisense TV ULED 100 Inch UX Series RGB-MiniLED 4K 165Hz Smart TV
+[20:09:32] [INFO] WooCommerce parent updated: Hisense Monitor 1080p 24 Inch N3F
+[20:10:13] [INFO] WooCommerce parent updated: LG TV QNED 65 Inch QNED82A6A 4K Smart TV AI Magic remote webOS25
+[20:11:02] [INFO] WooCommerce parent created: LG TV QNED 86 Inch QNED80 4K Smart TV 2025
+[20:11:55] [INFO] WooCommerce parent updated: Hisense Monitor 34 Inch Curved (G6Q) WQHD 200Hz
+[20:12:38] [INFO] WooCommerce parent created: Hisense TV QLED 85 Inch Q6N 4K Smart
+[20:12:38] [INFO] Scrape stopped by user.

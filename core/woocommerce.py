@@ -103,13 +103,14 @@ class WooCommerceClient:
             try:
                 kwargs = self._merge_params()
                 if existing:
+                    # This is an update, don't send images.
                     resp = self.session.put(
-                        f"{self.base}/products/{existing['id']}", json=parent_payload,
+                        f"{self.base}/products/{existing['id']}", json=parent_payload, # Reverted
                         timeout=self.timeout, verify=self.verify_ssl, **kwargs,
                     )
                 else:
                     resp = self.session.post(
-                        f"{self.base}/products", json=parent_payload,
+                        f"{self.base}/products", json=parent_payload, # Reverted
                         timeout=self.timeout, verify=self.verify_ssl, **kwargs,
                     )
                 if resp.status_code in (200, 201):

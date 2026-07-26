@@ -159,6 +159,7 @@ class MainWindow(QMainWindow):
         self.found_label = QLabel("0")
         self.processed_label = QLabel("0")
         self.images_label = QLabel("0")
+        self.synced_label = QLabel("0")
         self.errors_label = QLabel("0")
         self.elapsed_label = QLabel("00:00:00")
         self.eta_label = QLabel("-")
@@ -166,11 +167,12 @@ class MainWindow(QMainWindow):
         pg.addWidget(QLabel("Products Processed:"), 0, 2); pg.addWidget(self.processed_label, 0, 3)
         pg.addWidget(QLabel("Images Downloaded:"), 1, 0); pg.addWidget(self.images_label, 1, 1)
         pg.addWidget(QLabel("Errors:"), 1, 2); pg.addWidget(self.errors_label, 1, 3)
-        pg.addWidget(QLabel("Elapsed Time:"), 2, 0); pg.addWidget(self.elapsed_label, 2, 1)
-        pg.addWidget(QLabel("ETA:"), 2, 2); pg.addWidget(self.eta_label, 2, 3)
+        pg.addWidget(QLabel("Products Synced:"), 2, 0); pg.addWidget(self.synced_label, 2, 1)
+        pg.addWidget(QLabel("Elapsed Time:"), 3, 0); pg.addWidget(self.elapsed_label, 3, 1)
+        pg.addWidget(QLabel("ETA:"), 3, 2); pg.addWidget(self.eta_label, 3, 3)
         self.progress_bar = QProgressBar()
         self.progress_bar.setRange(0, 100)
-        pg.addWidget(self.progress_bar, 3, 0, 1, 4)
+        pg.addWidget(self.progress_bar, 4, 0, 1, 4)
         outer.addWidget(progress_box)
 
         # -- log window --
@@ -286,17 +288,28 @@ class MainWindow(QMainWindow):
         self.found_label.setText(str(counters.get("products_found", 0)))
         self.processed_label.setText(str(counters.get("products_processed", 0)))
         self.images_label.setText(str(counters.get("images_downloaded", 0)))
+        self.synced_label.setText(str(counters.get("products_synced", 0)))
         self.errors_label.setText(str(counters.get("errors", 0)))
 
-        found = counters.get("products_found", 0)
-        processed = counters.get("products_processed", 0)
-        if found:
-            pct = min(100, int(processed / found * 100))
+        total_products = counters.get("products_found", 0)
+        if total_products == 0:
+            return
+
+        # Calculate total work: 1 unit for scraping, 1 for syncing (if enabled)
+        work_per_product = 1
+        if self.config.woocommerce_sync:
+            work_per_product += 1
+
+        total_work = total_products * work_per_product
+        completed_work = counters.get("products_processed", 0) + counters.get("products_synced", 0)
+
+        if total_work > 0:
+            pct = min(100, int(completed_work / total_work * 100))
             self.progress_bar.setValue(pct)
             elapsed = time.time() - (self._run_start_time or time.time())
-            if processed > 0:
-                per_item = elapsed / processed
-                remaining = per_item * max(0, found - processed)
+            if completed_work > 0:
+                per_unit = elapsed / completed_work
+                remaining = per_unit * max(0, total_work - completed_work)
                 self.eta_label.setText(time.strftime("%H:%M:%S", time.gmtime(remaining)))
 
     def _tick_elapsed(self):

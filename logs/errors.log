@@ -1,0 +1,1 @@
+[19:58:18] [ERROR] Failed to sync product SKU=HISTV100U7Q: HTTP 400: {"code":"product_invalid_sku","message":"Invalid or duplicated SKU.","data":{"status":400,"resource_id":6900,"unique_sku":"HISTV100U7Q-1"}}

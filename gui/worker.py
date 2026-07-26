@@ -76,6 +76,7 @@ class ScrapeWorker(QThread):
             "products_found": 0,
             "products_processed": 0,
             "images_downloaded": 0,
+            "products_synced": 0,
             "errors": 0,
             "start_time": None,
         }
@@ -207,4 +208,6 @@ class ScrapeWorker(QThread):
             except WooCommerceError as e:
                 self._counters["errors"] += 1
                 self.logger.error(str(e))
+            self._counters["products_synced"] += 1
+            self._emit_progress()
         self.logger.info("WooCommerce sync complete.")
