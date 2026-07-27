@@ -19,6 +19,7 @@ SKU exists it's updated, otherwise it's created.
 
 import json
 import time
+import re
 from urllib.parse import urlparse
 
 import requests

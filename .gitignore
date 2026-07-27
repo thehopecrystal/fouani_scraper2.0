@@ -1,8 +1,22 @@
-/downloads/images/*
-/exports/json/*
-/exports/csv/*
-/exports/excel/*
-/exports/pdf/*
-/exports/database/*
-/logs/*
-/*/__pycache__/
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+
+# Log files
+logs/
+
+# Downloaded and exported data
+downloads/
+exports/
+
+# Local configuration (may contain secrets)
+config.json
+
+# IDE-specific settings
+.idea/
+.vscode/

@@ -63,15 +63,15 @@
   "export_json": false,
   "export_sqlite": false,
   "woocommerce_sync": true,
-  "csv_folder": "C:\\Users\\admin\\Downloads\\fouani_scraper (1)\\fouani_scraper2.0\\exports\\csv",
+  "csv_folder": "C:/Users/admin/Downloads/fouani_scraper (1)/fouani_scraper2.0/exports/csv",
   "json_folder": "C:\\Users\\admin\\Downloads\\fouani_scraper (1)\\fouani_scraper2.0\\exports\\json",
   "db_path": "C:\\Users\\admin\\Downloads\\fouani_scraper (1)\\fouani_scraper2.0\\exports\\database\\fouani_products.db",
   "images_folder": "C:\\Users\\admin\\Downloads\\fouani_scraper (1)\\fouani_scraper2.0\\downloads\\images",
   "logs_folder": "C:\\Users\\admin\\Downloads\\fouani_scraper (1)\\fouani_scraper2.0\\logs",
   "woocommerce": {
     "store_url": "https://bigboxhubstore.com",
-    "consumer_key": "ck_bea2599a98444f3c9b956e36646428f9c7e61fa4",
-    "consumer_secret": "cs_d12afe62159828d01f2e37bb3328e2c0db4a09de",
+    "consumer_key": "ck_050fc1223ac19bb779cd92681cbc34bfc1858aac",
+    "consumer_secret": "cs_a13d76d699a35484ec769f68b40cc3c8ac827459",
     "timeout_seconds": 60,
     "verify_ssl": true
   }
